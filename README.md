@@ -17,4 +17,3 @@ Webpack;
 
 
 
-* Ссылка на проект в GitHab   https://jezeld.github.io/mesto/
