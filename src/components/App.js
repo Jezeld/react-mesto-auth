@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom'
 import '../index.css'
 import { api } from '../utils/Api'
 import Header from './Header'
 import Footer from './Footer'
-import { PopupWithForm } from './PopupWithForm.js'
 import { EditProfilePopup } from './EditProfilePopup.js'
 import { ImagePopup } from './ImagePopup.js'
 import { Main } from './Main.js'
@@ -11,6 +11,11 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { EditAvatarPopup } from './EditAvatarPopup.js'
 import { AddPlacePopup } from './AddPlacePopup.js'
 import { ConfirmDeletePopup } from './ConfirmDeletePopup.js'
+import { ProtectedRoute } from './ProtectedRoute.js'
+import { Register } from './Register.js'
+import { Authorization } from './Authorization.js'
+import { InfoTooltip } from './InfoTooltip'
+import { auth } from '../utils/Auth.js'
 
 function App () {
   const [currentUser, setCurrentUser] = useState({})
@@ -24,15 +29,34 @@ function App () {
   const [deleteCard, setDeleteCard] = useState({})
   const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] =
     useState(false)
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] =
+    useState(false)
+  const [userEmail, setUserEmail] = useState('')
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    Promise.all([api.getInfo(), api.getInitialCards()])
-      .then(([dataUser, resCard]) => {
-        setCurrentUser(dataUser)
-        setCards(resCard)
-      })
-      .catch(error => console.log(`Ошибка: ${error}`))
+    if (!isLoggedIn) {
+      Promise.all([api.getInfo(), api.getInitialCards()])
+        .then(([dataUser, resCard]) => {
+          setCurrentUser(dataUser)
+          setCards(resCard)
+        })
+        .catch(error => console.log(`Ошибка: ${error}`))
+    }
+  }, [isLoggedIn])
+
+  useEffect(() => {
+    handleTokenCheck()
   }, [])
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/')
+    }
+  }, [isLoggedIn, navigate])
 
   function handleCardLike (card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -95,6 +119,58 @@ function App () {
       .finally(() => setIsLoading(false))
   }
 
+  function handleRegister (data) {
+    return auth
+      .register(data)
+      .then(res => {
+        setIsSuccessInfoTooltipStatus(true)
+        openInfoTooltip()
+        navigate('/sign-in')
+      })
+      .catch(err => {
+        console.log(err)
+        setIsSuccessInfoTooltipStatus(false)
+        openInfoTooltip()
+      })
+  }
+
+  function handleLogin (data) {
+    return auth
+      .login(data)
+      .then(res => {
+        localStorage.setItem('jwt', res.token)
+        setUserEmail(data.email)
+        setIsLoggedIn(true)
+        navigate('/')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  function handleTokenCheck () {
+    const jwt = localStorage.getItem('jwt')
+    if (!jwt) {
+      return
+    }
+    auth
+      .checkToken(jwt)
+      .then(res => {
+        setUserEmail(res.data.email)
+        setIsLoggedIn(true)
+        navigate('/')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  function handleSignOut () {
+    localStorage.removeItem('jwt')
+    setIsLoggedIn(false)
+    navigate('/sign-in')
+  }
+
   const handleTrashClick = card => {
     setDeleteCard(card)
     setIsConfirmDeletePopupOpen(true)
@@ -117,6 +193,10 @@ function App () {
     setFullImagePopupOpen(true)
   }
 
+  function openInfoTooltip () {
+    setInfoTooltipPopupOpen(true)
+  }
+
   function closeAllPopups () {
     setIsEditProfilePopupOpen(false)
     setIsEditAvatarPopupOpen(false)
@@ -124,20 +204,55 @@ function App () {
     setSelectedCard({})
     setFullImagePopupOpen(false)
     setIsConfirmDeletePopupOpen(false)
+    setInfoTooltipPopupOpen(false)
   }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page'>
-        <Header />
-        <Main
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleTrashClick}
+        <Header
+          loggedIn={isLoggedIn}
+          userEmail={userEmail}
+          handleSignOut={handleSignOut}
         />
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <ProtectedRoute
+                element={Main}
+                loggedIn={isLoggedIn}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleTrashClick}
+              />
+            }
+          />
+          <Route
+            path='/sign-in'
+            element={
+              <Authorization navigate={navigate} handleLogin={handleLogin} />
+            }
+          />
+
+          <Route
+            path='/sign-up'
+            element={
+              <Register navigate={navigate} handleRegister={handleRegister} />
+            }
+          />
+
+          <Route
+            path='*'
+            element={
+              isLoggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
+            }
+          />
+        </Routes>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -168,6 +283,11 @@ function App () {
           onClose={closeAllPopups}
           isLoading={isLoading}
           onSubmit={handleCardDelete}
+        />
+        <InfoTooltip
+          isOpen={isInfoTooltipPopupOpen}
+          isConfirmStatus={isSuccessInfoTooltipStatus}
+          onClose={closeAllPopups}
         />
       </div>
     </CurrentUserContext.Provider>
