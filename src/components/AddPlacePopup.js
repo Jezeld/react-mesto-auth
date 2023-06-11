@@ -1,30 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { PopupWithForm } from './PopupWithForm.js'
+import {useValidation} from '../hooks/useValidation'
 
 function AddPlacePopup ({ isOpen, onClose, onAddPlace, isLoading }) {
-  const [link, setLink] = useState('')
-  const [name, setName] = useState('')
-
-  function handleEditName (e) {
-    setName(e.target.value)
-  }
-
-  function handleEditlink (e) {
-    setLink(e.target.value)
-  }
-
-  function handleSubmit (e) {
-    e.preventDefault()
-    onAddPlace({
-      name: name,
-      link: link
-    })
-  }
+  const {values, handleChange, errors, isValid, isDisabled, resetForm} = useValidation({name: '', link: ''})
 
   useEffect(() => {
-    setLink('')
-    setName('')
-  }, [isOpen])
+    if (!isOpen){
+      resetForm();
+    }
+}, [isOpen, resetForm])
+
+function handleSubmit(e) {
+  e.preventDefault();
+  if(isValid){
+    onAddPlace({
+      name: values.name,
+      link: values.link
+    })
+  }
+}
+
+  // const [link, setLink] = useState('')
+  // const [name, setName] = useState('')
+
+  // function handleEditName (e) {
+  //   setName(e.target.value)
+  // }
+
+  // function handleEditlink (e) {
+  //   setLink(e.target.value)
+  // }
+
+  // function handleSubmit (e) {
+  //   e.preventDefault()
+  //   onAddPlace({
+  //     name: name,
+  //     link: link
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   setLink('')
+  //   setName('')
+  // }, [isOpen])
 
   // const nameRef = useRef('')
   // const linkRef = useRef('')
@@ -46,7 +65,7 @@ function AddPlacePopup ({ isOpen, onClose, onAddPlace, isLoading }) {
 
   return (
     <PopupWithForm
-      name='popup-add'
+      name='add'
       title='Новое место'
       isOpen={isOpen}
       onClose={onClose}
@@ -54,6 +73,8 @@ function AddPlacePopup ({ isOpen, onClose, onAddPlace, isLoading }) {
       buttonText='Создать'
       isLoading={isLoading}
       loadingText={'Сохранение...'}
+      isValid={isValid}
+      isDisabled={isDisabled}
     >
       <fieldset className='form__fieldset'>
         <input
@@ -64,24 +85,24 @@ function AddPlacePopup ({ isOpen, onClose, onAddPlace, isLoading }) {
           placeholder='Название'
           minLength={2}
           maxLength={30}
-          value={name}
-          onChange={handleEditName}
+          value={values.name || ''}
+          onChange={handleChange}
           // ref={nameRef}
           required
         />
-        <span className='form__span-error image-input-error' />
+        <span className={`form__span-error image-input-error ${isValid && '' }`}>{errors.name}</span>
         <input
           type='url'
           name='link'
           id='link-input'
           className='form__input form__input_information_link'
           placeholder='Ссылка на картинку'
-          value={link}
-          onChange={handleEditlink}
+          value={values.link || ''}
+          onChange={handleChange}
           // ref={linkRef}
           required
         />
-        <span className='form__span-error link-input-error' />
+         <span className={`form__span-error link-input-error ${isValid && '' }`}>{errors.link}</span>
       </fieldset>
     </PopupWithForm>
   )

@@ -13,30 +13,34 @@ class Auth {
     return Promise.reject(`Ошибка: ${res.status}`)
   }
 
+  _request (url, options) {
+    return fetch(url, options).then(this._checkResponse)
+  }
+
   register (data) {
-    return fetch(`${this._baseUrl}/signup`, {
+    return this._request(`${this._baseUrl}/signup`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
-    }).then(this._checkResponse)
+    })
   }
 
   login (data) {
-    return fetch(`${this._baseUrl}/signin`, {
+    return this._request(`${this._baseUrl}/signin`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
-    }).then(this._checkResponse)
+    })
   }
 
   checkToken (jwt) {
-    return fetch(`${this._baseUrl}/users/me`, {
+    return this._request(`${this._baseUrl}/users/me`, {
       method: 'GET',
       headers: {
         ...this._headers,
         Authorization: `Bearer ${jwt}`
       }
-    }).then(this._checkResponse)
+    })
   }
 }
 

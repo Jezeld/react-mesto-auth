@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function UsePopupClose(isOpen, onClose) {
+function usePopupClose(isOpen, onClose) {
   useEffect(() => {
     if (!isOpen) return;
     const handleOverlay = (event) => {
@@ -21,4 +21,4 @@ function UsePopupClose(isOpen, onClose) {
     };
   }, [isOpen, onClose]);
 }
-export  {UsePopupClose}
+export  {usePopupClose}

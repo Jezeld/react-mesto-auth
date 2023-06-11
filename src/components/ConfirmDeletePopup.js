@@ -11,12 +11,14 @@ function ConfirmDeletePopup ({ isOpen, onClose, isLoading, onSubmit, card }) {
       isOpen={isOpen}
       onClose={onClose}
       title='Вы уверены?'
-      name='popup-delete'
+      name='delete'
       onSubmit={handleSubmit}
       isLoading={isLoading}
       buttonText='Да'
       loadingText={'Удаление...'}
-    ></PopupWithForm>
+      isDisabled={false}
+      isValid={true}
+    />
   )
 }
 

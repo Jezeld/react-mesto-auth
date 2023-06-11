@@ -13,7 +13,7 @@ import { AddPlacePopup } from './AddPlacePopup.js'
 import { ConfirmDeletePopup } from './ConfirmDeletePopup.js'
 import { ProtectedRoute } from './ProtectedRoute.js'
 import { Register } from './Register.js'
-import { Authorization } from './Authorization.js'
+import { Login } from './Login.js'
 import { InfoTooltip } from './InfoTooltip'
 import { auth } from '../utils/Auth.js'
 
@@ -41,6 +41,8 @@ function App () {
     if (!isLoggedIn) {
       Promise.all([api.getInfo(), api.getInitialCards()])
         .then(([dataUser, resCard]) => {
+          // console.log('dataUser', dataUser)
+          // console.log('resCard', resCard)
           setCurrentUser(dataUser)
           setCards(resCard)
         })
@@ -75,6 +77,7 @@ function App () {
     api
       .changeUserInfo(info)
       .then(newData => {
+        // console.log('newData', newData)
         setCurrentUser(newData)
         closeAllPopups()
       })
@@ -235,7 +238,7 @@ function App () {
           <Route
             path='/sign-in'
             element={
-              <Authorization navigate={navigate} handleLogin={handleLogin} />
+              <Login navigate={navigate} handleLogin={handleLogin} />
             }
           />
 

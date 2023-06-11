@@ -12,41 +12,43 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`)
   }
 
+  _request (url, options) {
+    return fetch(url, options).then(this._checkResponse)
+  }
+
   getInfo () {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: 'GET',
+    return this._request(`${this._baseUrl}/users/me`, {
       headers: this._headers
-    }).then(this._checkResponse)
+    })
   }
 
   getInitialCards () {
-    return fetch(`${this._baseUrl}/cards`, {
-      method: 'GET',
+    return this._request(`${this._baseUrl}/cards`, {
       headers: this._headers
-    }).then(this._checkResponse)
+    })
   }
 
   changeUserInfo (data) {
-    return fetch(`${this._baseUrl}/users/me`, {
+    return this._request(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(data)
-    }).then(this._checkResponse)
+    })
   }
 
   addNewCard (data) {
-    return fetch(`${this._baseUrl}/cards`, {
+    return this._request(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
-    }).then(this._checkResponse)
+    })
   }
 
   deleteCard (cardid) {
-    return fetch(`${this._baseUrl}/cards/${cardid}`, {
+    return this._request(`${this._baseUrl}/cards/${cardid}`, {
       method: 'DELETE',
       headers: this._headers
-    }).then(this._checkResponse)
+    })
   }
 
   // deleteLike(cardid) {
@@ -67,26 +69,26 @@ class Api {
 
   changeLike (cardId, isLiked) {
     if (isLiked) {
-      return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: 'DELETE',
         headers: this._headers
-      }).then(this._checkResponse)
+      })
     } else {
-      return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: this._headers
-      }).then(this._checkResponse)
+      })
     }
   }
 
   changeAvatar (data) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
+    return this._request(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         avatar: data.avatar
       })
-    }).then(this._checkResponse)
+    })
   }
 }
 

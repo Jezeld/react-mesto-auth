@@ -53,7 +53,7 @@
 @import url(./blocks/data/__button/data__button.css);
 @import url(./blocks/data/__text/data__text.css);
 @import url(./blocks/popup/__tooltip-sucсess/popup__tooltip-sucсess.css);
-@import url(./blocks/popup/__tooltip-container/popup__tooltip-container.css);
+@import url(./blocks/popup/__container-tooltip/popup__container-tooltip.css);
 @import url(./blocks/popup/__title/popup__title.css);
 @import url(./blocks/header/__container/header__container.css);
 @import url(./blocks/header/__link/header__link.css);
