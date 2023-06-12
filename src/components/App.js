@@ -16,6 +16,7 @@ import { Register } from './Register.js'
 import { Login } from './Login.js'
 import { InfoTooltip } from './InfoTooltip'
 import { auth } from '../utils/Auth.js'
+import {PageNotFound} from './PageNotFound.js'
 
 function App () {
   const [currentUser, setCurrentUser] = useState({})
@@ -237,9 +238,7 @@ function App () {
           />
           <Route
             path='/sign-in'
-            element={
-              <Login navigate={navigate} handleLogin={handleLogin} />
-            }
+            element={<Login navigate={navigate} handleLogin={handleLogin} />}
           />
 
           <Route
@@ -249,11 +248,16 @@ function App () {
             }
           />
 
-          <Route
+          {/* <Route
             path='*'
             element={
               isLoggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
             }
+          /> */}
+
+          <Route
+            path='*'
+            element={<PageNotFound />}
           />
         </Routes>
         <Footer />
