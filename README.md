@@ -15,5 +15,5 @@
 Webpack;
 Хуки useState, useEffect, useRef;
 
-* Ссылка на проект в GitHab   https://jezeld.github.io/mesto/
+* Ссылка на проект в GitHab  https://jezeld.github.io/react-mesto-auth/
 
