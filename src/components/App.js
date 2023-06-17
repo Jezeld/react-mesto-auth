@@ -115,9 +115,11 @@ function App () {
     api
       .deleteCard(card._id)
       .then(newCard => {
+
         const newCards = cards.filter(c => (c._id === card._id ? '' : newCard))
         setCards(newCards)
         closeAllPopups()
+
       })
       .catch(error => console.log(`Ошибка: ${error}`))
       .finally(() => setIsLoading(false))
