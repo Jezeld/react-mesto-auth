@@ -38,7 +38,7 @@ function PopupWithForm ({
   )
 }
 
-
+export { PopupWithForm }
 
 
 // function PopupWithForm ({
@@ -83,4 +83,4 @@ function PopupWithForm ({
 //   )
 // }
 
-export { PopupWithForm }
+
