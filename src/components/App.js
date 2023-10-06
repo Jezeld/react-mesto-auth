@@ -244,7 +244,7 @@ function App () {
           />
 
           <Route
-            path='react-mesto-auth'
+            path='/react-mesto-auth'
             element={
               <Register navigate={navigate} handleRegister={handleRegister} />
             }
