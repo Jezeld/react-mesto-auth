@@ -249,14 +249,6 @@ function App () {
               <Register navigate={navigate} handleRegister={handleRegister} />
             }
           />
-
-          {/* <Route
-            path='*'
-            element={
-              isLoggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
-            }
-          /> */}
-
           <Route
             path='*'
             element={<PageNotFound />}

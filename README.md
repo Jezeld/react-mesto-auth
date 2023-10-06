@@ -21,29 +21,41 @@
 
 ###  🛠️ Стэк:
 
-*   HTML5
-    *   Семантическая вёрстка
-    *   Разметка Open Graph
-*   CSS3
-    *   Flexbox
-    *   Grid Layout
-    *   Adaptive UI
-    *   Media Queries
-*   [BEM Nested](https://ru.bem.info/methodology/filestructure/)
-*   JavaScript
-    *   ES6
-    *   ООП
-    *   Классовый JS
-    *   JSON
-    *   Промисы;
-    *   API (Fetch)
-*   [ReactJS](https://ru.legacy.reactjs.org/)
-    *   Реакт-хуки
-    *   React Router
-    *   React Protected Router
-*   Git
-*   Figma
-*   Webpack
-*   NPM
+HTML5
 
-*   Ссылка на проект в GitHab:  https://jezeld.github.io/sign-in
+*   Семантическая вёрстка
+*   Разметка Open Graph
+
+CSS3
+
+*   Flexbox
+*   Grid Layout
+*   Adaptive UI
+*   Media Queries
+
+[BEM Nested](https://ru.bem.info/methodology/filestructure/)
+
+JavaScript
+
+*   ES6
+*   ООП
+*   Классовый JS
+*   JSON
+*   Промисы;
+*   API (Fetch)
+
+[ReactJS](https://ru.legacy.reactjs.org/)
+
+*   Реакт-хуки
+*   React Router
+*   React Protected Router
+
+Git
+
+Figma
+
+Webpack
+
+NPM
+
+Ссылка на проект в GitHab: https://jezeld.github.io/react-mesto-auth/
